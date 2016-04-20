@@ -6,7 +6,7 @@ This repository contains example data used by notebooks/examples from [wradlib/w
 Installing
 ==========
 
-- Download and unpack the archive ([wradlib-data.zip](https://github.com/wradlib/wradlib-data/archive/wradlib-data.zip) or [wradlib-data.tar.gz](https://github.com/wradlib/wradlib-data/archive/wradlib-data.tar.gz))
+- Download and unpack the archive [master.zip](https://github.com/wradlib/wradlib-data/archive/master.zip)
 - set WRADLIB_DATA environment variable pointing to the wradlib-data location
   - LINUX 
     - bash: export WRADLIB_DATA=/path/to/wradlib-data
