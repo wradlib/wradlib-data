@@ -1,0 +1,9 @@
+name: wradlib-data-dev
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - pip
+  - pooch
+  - pre-commit
+  - pytest-cov
