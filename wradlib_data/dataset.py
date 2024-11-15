@@ -25,3 +25,23 @@ def locate():
         The local data storage location.
     """
     return str(DATASETS.abspath)
+
+def open_radar_downloader(url, output_file, mypooch):
+    """Create Downloader which adds request-headers"""
+
+    https(url, output_file, mypooch)
+
+
+# preserve current fetch
+DATASETS._fetch = DATASETS.fetch
+
+
+# wrap new fetch
+@wraps(DATASETS._fetch)
+def fetch(*args, **kwargs):
+    kwargs.setdefault('downloader', pooch.HTTPDownloader(headers={"User-Agent": "wradlib-data"}))
+    return DATASETS._fetch(*args, **kwargs)
+
+
+# override original fetch with overridden fetch
+DATASETS.fetch = fetch
