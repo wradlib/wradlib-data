@@ -1,13 +1,17 @@
-import pkg_resources
+import importlib.resources
+from functools import wraps
+
 import pooch
+
+import wradlib_data
 
 DATASETS = pooch.create(
     path=pooch.os_cache('wradlib-data'),
-    base_url='https://github.com/wradlib/wradlib-data/raw/pooch/data/',
+    base_url='https://github.com/wradlib/wradlib-data/raw/main/data/',
     env='WRADLIB_DATA',
 )
 
-with pkg_resources.resource_stream('wradlib_data', 'registry.txt') as registry_file:
+with open(importlib.resources.files('wradlib_data') / 'registry.txt') as registry_file:
     DATASETS.load_registry(registry_file)
 
 
@@ -26,9 +30,10 @@ def locate():
     """
     return str(DATASETS.abspath)
 
-def open_radar_downloader(url, output_file, mypooch):
+def wradlib_downloader(url, output_file, mypooch):
     """Create Downloader which adds request-headers"""
-
+    headers = {'User-Agent': f'wradlib-data {wradlib_data.__version__}'}
+    https = pooch.HTTPDownloader(headers=headers)
     https(url, output_file, mypooch)
 
 
@@ -39,7 +44,7 @@ DATASETS._fetch = DATASETS.fetch
 # wrap new fetch
 @wraps(DATASETS._fetch)
 def fetch(*args, **kwargs):
-    kwargs.setdefault('downloader', pooch.HTTPDownloader(headers={"User-Agent": "wradlib-data"}))
+    kwargs.setdefault('downloader', wradlib_downloader)
     return DATASETS._fetch(*args, **kwargs)
 
 
